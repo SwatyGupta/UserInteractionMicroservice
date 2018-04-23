@@ -23,7 +23,6 @@ import com.userinterface.response.data.TransactionResponseRepository;
 import com.userinterface.service.RabbitMQSender;
 
 @RestController
-//@RequestMapping(value = "/rabbitmq/")
 @ComponentScan({"com.example.demo.controller"})
 public class RabbitMQWebController {
 	@Autowired
@@ -37,16 +36,17 @@ public class RabbitMQWebController {
 							@RequestParam("payer") String payer,@RequestParam("admissionDate") String admissionDate, 
 							@RequestParam("serviceProvider") String serviceProvider) {
 	
-	Calendar calobj = Calendar.getInstance();
-	DateFormat df = new SimpleDateFormat("HH:mm:ss");
+	Calendar calobj = Calendar.getInstance(); 
+	DateFormat time = new SimpleDateFormat("HH:mm:ss");
+	DateFormat date = new SimpleDateFormat("dd/MM/yyyy");
 	TransactionRequest pt=new TransactionRequest();
 	pt.setPatientFirstName(firstName);
 	pt.setPatientLastName(lastName);
 	pt.setPayer(payer);
 	pt.setAdmissionDate(admissionDate);
 	pt.setServiceProvider(serviceProvider);
-	pt.setTransactionDate(new Date().toString());
-	pt.setTransactionTime(df.format(calobj.getTime()));
+	pt.setTransactionDate(date.format(new Date()));
+	pt.setTransactionTime(time.format(calobj.getTime()));
 	pt.setTransactionType("NOA");
 	rabbitMQSender.send(pt);	
 	System.out.println("Recieved Message:");
@@ -61,10 +61,10 @@ public class RabbitMQWebController {
 		ModelAndView map = new ModelAndView("running");
 		
 		map.addObject("running");
-		//map.addAttribute("employees", allEmployees.get(0).getPatientFirstName());
+		
 		map.getModelMap().addAttribute("response");
 		return map;
-		//return new ModelAndView("allEmployees", "employees", allEmployees);
+		
 
 	}
 	
@@ -77,7 +77,7 @@ public class RabbitMQWebController {
 		ModelAndView map = new ModelAndView("response");
 		
 		map.addObject("response", allResponses);
-		//map.addAttribute("employees", allEmployees.get(0).getPatientFirstName());
+		
 		
 		map.getModelMap().addAttribute("firstName", allResponses.get(0).getPatientFirstName());
 		map.getModelMap().addAttribute("lastName", allResponses.get(0).getPatientLastName());
@@ -92,7 +92,7 @@ public class RabbitMQWebController {
 		map.getModelMap().addAttribute("reviewIdentificationNumber", allResponses.get(0).getReviewIdentificationNumber());
 		map.getModelMap().addAttribute("certificationActionCode", allResponses.get(0).getCertificationActionCode());
 		return map;
-		//return new ModelAndView("allEmployees", "employees", allEmployees);
+		
 
 	}
 

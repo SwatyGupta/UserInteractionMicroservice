@@ -22,7 +22,7 @@ public class Subcriber {
     public void recievedMessage(TransactionResponse response) {
         System.out.println("Recieved Message: " + ""+response);
         
-       rsp.deleteAll();
+        rsp.deleteAll();
         rsp.insert(response);
         
      

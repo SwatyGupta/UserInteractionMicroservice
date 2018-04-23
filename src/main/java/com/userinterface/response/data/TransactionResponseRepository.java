@@ -39,7 +39,7 @@ public class TransactionResponseRepository  {
 	        response.setReviewDecisionReasonCode(rs.getString("reviewDecisionReasonCode"));
 	        response.setReviewIdentificationNumber(rs.getString("reviewIdentificationNumber"));
 	        response.setCertificationActionCode(rs.getString("certificationActionCode"));
-	        System.out.println("rowmapper:------------"+response.getCertificationActionCode());
+	       
 			return response;
 		}
 
@@ -47,17 +47,12 @@ public class TransactionResponseRepository  {
 	}
 	
 	public List<TransactionResponse> findAll()  {
-		System.out.println("find all:------------");
+		
        return jdbcTemplate.query("select * from transactionresponse", new TransactionResponseRowMapper());
         
 
 	}
-	public TransactionResponse findById(int id) {
-	    return jdbcTemplate.queryForObject("select * from transactionresponse where id=?", new Object[] {
-	            id
-	        },
-	        new BeanPropertyRowMapper < TransactionResponse > (TransactionResponse.class));
-	}
+	
 public int deleteAll() {
         return jdbcTemplate.update("delete transactionresponse");
 }
