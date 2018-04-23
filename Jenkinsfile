@@ -4,7 +4,7 @@ pipeline {
 
     stages {
 
-        stage ('Workspace refresh') {
+        stage ('Workspace refresh for') {
             steps {
                 git 'https://github.com/SwatyGupta/UserInteractionMicroservice'
             }
