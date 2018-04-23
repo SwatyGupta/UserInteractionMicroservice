@@ -28,8 +28,25 @@ public class RabbitMQWebController {
 	@Autowired
 	TransactionResponseRepository response;
 	
+	public TransactionResponseRepository getResponse() {
+		return response;
+	}
+
+	public void setResponse(TransactionResponseRepository response) {
+		this.response = response;
+	}
+
+
 	@Autowired
 	RabbitMQSender rabbitMQSender;
+
+	public RabbitMQSender getRabbitMQSender() {
+		return rabbitMQSender;
+	}
+
+	public void setRabbitMQSender(RabbitMQSender rabbitMQSender) {
+		this.rabbitMQSender = rabbitMQSender;
+	}
 
 	@RequestMapping(value = "/producer", method = RequestMethod.GET)
 	public RedirectView  producer(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName,
@@ -39,7 +56,7 @@ public class RabbitMQWebController {
 	Calendar calobj = Calendar.getInstance(); 
 	DateFormat time = new SimpleDateFormat("HH:mm:ss");
 	DateFormat date = new SimpleDateFormat("dd/MM/yyyy");
-	TransactionRequest pt=new TransactionRequest();
+	TransactionRequest pt=instantiateTransactionRequest();
 	pt.setPatientFirstName(firstName);
 	pt.setPatientLastName(lastName);
 	pt.setPayer(payer);
@@ -49,10 +66,14 @@ public class RabbitMQWebController {
 	pt.setTransactionTime(time.format(calobj.getTime()));
 	pt.setTransactionType("NOA");
 	rabbitMQSender.send(pt);	
-	System.out.println("Recieved Message:");
+	System.out.println("Received Message:");
 	RedirectView test = new RedirectView();
 	test.setUrl("running.html");
 	return test;
+	}
+
+	public TransactionRequest instantiateTransactionRequest() {
+		return new TransactionRequest();
 	}
 		
 	@RequestMapping(value = "running.html", method = RequestMethod.GET)
@@ -61,10 +82,10 @@ public class RabbitMQWebController {
 		ModelAndView map = new ModelAndView("running");
 		
 		map.addObject("running");
-		
+		//map.addAttribute("employees", allEmployees.get(0).getPatientFirstName());
 		map.getModelMap().addAttribute("response");
 		return map;
-		
+		//return new ModelAndView("allEmployees", "employees", allEmployees);
 
 	}
 	
@@ -77,7 +98,7 @@ public class RabbitMQWebController {
 		ModelAndView map = new ModelAndView("response");
 		
 		map.addObject("response", allResponses);
-		
+		//map.addAttribute("employees", allEmployees.get(0).getPatientFirstName());
 		
 		map.getModelMap().addAttribute("firstName", allResponses.get(0).getPatientFirstName());
 		map.getModelMap().addAttribute("lastName", allResponses.get(0).getPatientLastName());
@@ -92,7 +113,7 @@ public class RabbitMQWebController {
 		map.getModelMap().addAttribute("reviewIdentificationNumber", allResponses.get(0).getReviewIdentificationNumber());
 		map.getModelMap().addAttribute("certificationActionCode", allResponses.get(0).getCertificationActionCode());
 		return map;
-		
+		//return new ModelAndView("allEmployees", "employees", allEmployees);
 
 	}
 

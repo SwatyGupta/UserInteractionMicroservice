@@ -20,12 +20,20 @@ public class TransactionResponseRepository  {
 	@Autowired	
 	JdbcTemplate jdbcTemplate;
 	
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
 	class TransactionResponseRowMapper implements RowMapper < TransactionResponse > {
 
 		@Override
 		public TransactionResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
 			
-			TransactionResponse response=new TransactionResponse();
+			TransactionResponse response=instantiateTransactionResponse();
 			response.setId(rs.getInt("id"));
 	        response.setTransactionDate(rs.getString("transactionDate"));
 	        response.setTransactionTime(rs.getString("transactionTime"));
@@ -39,20 +47,23 @@ public class TransactionResponseRepository  {
 	        response.setReviewDecisionReasonCode(rs.getString("reviewDecisionReasonCode"));
 	        response.setReviewIdentificationNumber(rs.getString("reviewIdentificationNumber"));
 	        response.setCertificationActionCode(rs.getString("certificationActionCode"));
-	       
+	        System.out.println("rowmapper:------------"+response.getCertificationActionCode());
 			return response;
 		}
 
-		       
+		TransactionResponse instantiateTransactionResponse() {
+			return new TransactionResponse();
+		}
+	       
 	}
 	
 	public List<TransactionResponse> findAll()  {
-		
+		System.out.println("find all:------------");
        return jdbcTemplate.query("select * from transactionresponse", new TransactionResponseRowMapper());
         
 
 	}
-	
+
 public int deleteAll() {
         return jdbcTemplate.update("delete transactionresponse");
 }
